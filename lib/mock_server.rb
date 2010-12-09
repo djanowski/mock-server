@@ -6,11 +6,9 @@ class MockServer
     use Rack::ShowExceptions
   end
 
-  def initialize(port = 4000, &block)
+  def initialize(app, port = 4000, &block)
+    @app = app
     @port = port
-
-    @app = Class.new(Sinatra::Base)
-    @app.class_eval(&block)
   end
 
   def start
@@ -27,7 +25,9 @@ class MockServer
 
   module Methods
     def mock_server(*args, &block)
-      @server = MockServer.new(*args, &block).start
+      app = Class.new(Sinatra::Base)
+      app.class_eval(&block)
+      @server = MockServer.new(app, *args, &block).start
     end
   end
 
