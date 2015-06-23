@@ -6,28 +6,31 @@ class MockServer
     use Rack::ShowExceptions
   end
 
-  def initialize(app, port = 4000, &block)
+  def initialize(app, host: "0.0.0.0", port: 4000, &block)
     @app = app
+    @host = host
     @port = port
   end
 
   def start
     Thread.new do
       with_quiet_logger do |logger|
-        Rack::Handler::WEBrick.run(@app, :Port => @port, :Logger => logger, :AccessLog => [])
+        Rack::Handler::WEBrick.run(@app, {
+          :Host => @host, :Port => @port, :Logger => logger, :AccessLog => []
+        })
       end
     end
 
-    wait_for_service("0.0.0.0", @port)
+    wait_for_service(@host, @port)
 
     self
   end
 
   module Methods
-    def mock_server(*args, &block)
+    def mock_server(**args, &block)
       app = Class.new(Sinatra::Base)
       app.class_eval(&block)
-      @server = MockServer.new(app, *args, &block).start
+      @server = MockServer.new(app, **args, &block).start
     end
   end
 
