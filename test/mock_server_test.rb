@@ -1,7 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "lib", "mock_server"))
 
 require "test/unit"
-require "ruby-debug"
 require "open-uri"
 
 class HelloWorldSinatra < Sinatra::Base
