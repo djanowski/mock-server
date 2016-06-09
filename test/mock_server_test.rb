@@ -50,3 +50,20 @@ class MockServerMethodsTest < Test::Unit::TestCase
     assert_equal "Goodbye", open("http://localhost:4002").read
   end
 end
+
+class MockServerStopTest < Test::Unit::TestCase
+  def setup
+    @server = MockServer.new(HelloWorldSinatra, 4003)
+    @server.start
+  end
+
+  def test_stop_server
+    assert_equal "Hello", open("http://localhost:4003").read
+
+    @server.stop
+
+    assert_raises(Errno::ECONNREFUSED) {
+      open("http://localhost:4003").read
+    }
+  end
+end
