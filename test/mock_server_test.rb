@@ -29,7 +29,7 @@ end
 
 class MockServerRackBuilderTest < Test::Unit::TestCase
   def setup
-    @server = MockServer.new(HelloWorldRackBuilder, 4001)
+    @server = MockServer.new(HelloWorldRackBuilder, port: 4001)
     @server.start
   end
 
@@ -40,7 +40,7 @@ class MockServerRackBuilderTest < Test::Unit::TestCase
 class MockServerMethodsTest < Test::Unit::TestCase
   extend MockServer::Methods
 
-  mock_server(4002) {
+  mock_server(port: 4002) {
     get "/" do
       "Goodbye"
     end
