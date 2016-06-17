@@ -1,4 +1,5 @@
 require "sinatra/base"
+require "socket"
 require "logger"
 
 class MockServer
